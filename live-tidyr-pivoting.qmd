@@ -34,6 +34,9 @@ The dataset contains the results of a waste characterisation study of public bin
 Additional metadata on location and type of bin is available.
 
 ```{r}
+read_csv2(here::here("data/rbtl_fs22_waste_composition_bellevue.csv")) #read_csv lo lee separado por , el read_csv2 lo lee separado por ; 
+waste_data <- read_delim(here::here("data/rbtl_fs22_waste_composition_bellevue.csv"), delim = ";") #decimos como queremos que lea el dato separado por ; 
+
 
 
 
@@ -41,6 +44,13 @@ Additional metadata on location and type of bin is available.
 
 ```{r}
 
+waste_data_long <- waste_data |> 
+  select(number, starts_with("weight")) |>  #seleccionamos todas las que empicen con weight
+  rename_with(~str_remove(.x, "weight_")) |>  #renombra las columnas y elimina la parte del weight_ para todas las variables, en este caso .x 
+  select(-total) |>  # no nos interesa la de total
+  pivot_longer(cols = !number,
+               names_to = "weight_category",
+               values_to = "weight") #cambiamos y pivoteamos todas menos la de number
 
 ```
 
@@ -55,15 +65,26 @@ gapminder_wide <- read_csv("https://raw.githubusercontent.com/swcarpentry/r-novi
 ```
 
 ```{r}
-
+gapminder_wide
 
 ```
 
 ### From wide to long
 
 ```{r}
+gapminder_long <- gapminder_wide |> 
+  pivot_longer(cols = gdpPercap_1952:pop_2007,
+               names_to = "obstype_year",
+               values_to = "obs_value") |> 
+  separate(col = obstype_year, into = c("obs_type", "year"), sep = "_") #los separa en dos columnas
 
 
+#El siguiente codigo lo que hace es simular que tengamos las variables juntas sin ningun caracter especifico que separe gdpPerCapYYYY so in this usamos la funcion "sep" para separarlo de los ultimos 4 caracteres finales, pero solo funciona para las variables que tengan esa cantidad de caracteres "gdpPerCapYYY". porque si es mayor o menor entonces tendriamos que modificarlo dependiendo del tamaño del texto. 
+
+#gapminder_long |> 
+#  unite(col = "obstype_year", obs_type:year, sep = "") |> 
+#  separate(col = obstype_year, into = c("obs_type", "year"), sep = -4) |> 
+#  count(obs_type)
 ```
 
 **Your turn**
@@ -73,13 +94,25 @@ gapminder_wide <- read_csv("https://raw.githubusercontent.com/swcarpentry/r-novi
 
 ```{r}
 
+gapminder_long_summary <- gapminder_long |> 
+  group_by(continent, obs_type) |> 
+  summarise(Average = mean(obs_value))
+
+gapminder_long_summary |> 
+  pivot_wider(names_from = obs_type,
+              values_from = Average) |> 
+  knitr::kable(digits = 1)
 ```
 
 ### From long to intermediate format
 
 ```{r}
 
-
+gapminder_normal <- gapminder_long |> 
+  pivot_wider(names_from = obs_type,
+              values_from = obs_value) |> 
+  select(country, continent, year, lifeExp, pop, gdpPercap) |> 
+  arrange(country, year)
 ```
 
 # References

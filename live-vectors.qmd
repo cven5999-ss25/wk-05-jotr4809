@@ -12,7 +12,9 @@ execute:
 ---
 
 ```{r}
-
+library(tidyverse)
+library(gapminder)
+library(lubridate)
 ```
 
 # Part 1: (Atomic) Vectors
@@ -25,18 +27,34 @@ Integer and double vectors are collectively known as numeric vectors.
 -   int: integer
 -   dbl: double
 -   chr: character
+-   fct: factor, a type of character that orders the variables
 
 ```{r}
 
-
-
+glimpse(gapminder)
+gapminder
 ```
 
 ## Types of atomic vectors
 
+-   Alt + - for \<-
+
+-   Option + - in IOs
+
 ```{r}
+vector_lgl <- c(TRUE, TRUE, FALSE) #vector logical
+typeof(vector_lgl)
+sum(vector_lgl)
 
+vector_int <- c(1L, 3L, 6L) #vector integer 
+typeof(vector_int)
 
+vector_dbl <- c(192, 118.5, 162.5) #vector double
+typeof(vector_dbl) #la diferencia entre typeof y class es que una es mas especifica
+class(vector_dbl) #que la otra 
+
+vector_chr <- c("large", "small", "medium")
+typeof(vector_chr)
 ```
 
 ## Explicit vector coercion & augmented vectors
@@ -44,13 +62,45 @@ Integer and double vectors are collectively known as numeric vectors.
 Vectors can also contain arbitrary additional metadata in the form of attributes. These attributes are used to create augmented vectors which build on additional behaviour. For example, factors are built on top of integer vectors.
 
 ```{r}
+as.numeric(vector_lgl) #lo convierte de logico a numerico 
 
+vector_fct <- factor(vector_chr, levels = c("small", "medium", "large")) #les da un orden y nivel
+typeof(vector_fct)
+attributes(vector_fct)
+as.integer(vector_fct)
 
+tib_data <- tibble(
+  vector_lgl = vector_lgl, #el primero es el nombre de la columna, el segundo es la variable 
+  vector_int = vector_int,
+  vector_dbl = vector_dbl,
+  vector_chr = vector_chr,
+  vector_fct = vector_fct,
+  date = Sys.Date(),
+  date2 = "06/30/2025"
+)
 ```
 
 ### Working with dates
 
 ```{r}
+as.numeric(Sys.Date()) # Number of dates since 1970-01-01 (YYYY-MM-DD) ISO 8610
 
+# Q: Which date is number 1 
+
+as_date(1)
+
+as_date(-1)
+
+tib_data |> 
+  mutate(month = month(date, label = TRUE, abbr = FALSE)) |> #label es para que muestre el nombre es vez del numero, y abbr false es para que muestre toda la palabra 
+  mutate(wday = wday(date2))
+
+
+tib_data |> 
+  mutate(date2 = mdy(date2)) |> #DEFINIENDO EL tipo de formato de fecha
+  mutate(month = month(date2),  
+         week = week(date2),
+         wday = wday(date2, label = TRUE, abbr = FALSE), #manejando la visualizacion de la variable
+         quarter = quarter(date2))
 
 ```
