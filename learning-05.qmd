@@ -11,15 +11,15 @@ Learning reflections are part of your weekly homework and have a weight of 20% o
 
 # Lecture
 
-<!--# Add your reflections on the lecture of this week here -->
+At the beginning it was quite challenging to understand how the pivot works, but after seen some of the examples it was clear. Also learning about the use of vectors make me understand how to manage data when we want to convert from one to other.
 
 # Homework Assignment
 
-<!--# Add your reflections on the homework programming assignment here -->
+This one was a bit more challenging because we needed to use some previous codes from previous homework, but with the help of previous weeks and some insights from the solution it was understandable.
 
 # Readings
 
-<!--# Add your reflections on the required readings here -->
+The factors reading clarify more things that I was expecting. And the tidi data reading make me understand how to use the pivot properties
 
 # Submit learning reflections
 
