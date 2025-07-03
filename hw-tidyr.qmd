@@ -15,7 +15,11 @@ execute:
 
 1.  What's the `tidyverse` Package? Describe in maximum two sentences below.
 
+    Tidyverse package is a set of coding tools that allow us to manage the information read in a csv and change the way of working with it in an easier way
+
 2.  What's the [`here` Package](https://here.r-lib.org/articles/here.html)? Why is useful when working with quarto or R Markdown files?
+
+    Here package allow us to read data from a specific folder, and it is helpful when working with R files because we can manage different parameters like the separator sign
 
 ```{r}
 library(tidyverse)
